@@ -1,0 +1,78 @@
+env:
+  global:
+  - CONAN_USERNAME: rhololkeolke
+  - CONAN_LOGIN_USERNAME: rhololkeolke
+  - CONAN_CHANNEL: testing
+  - CONAN_UPLOAD: https://api.bintray.com/conan/rhololkeolke/public-conan
+  - CONAN_STABLE_BRANCH_PATTERN: stable/*
+  - CONAN_UPLOAD_ONLY_WHEN_STABLE: 1
+  - CONAN_ARCHS: x86_64
+  - CONAN_BUILD_POLICY: outdated
+  - secure: Dp4aeCyfebalVz/ef1I3jt7G1sUBxupwK7WYaN0RVpX0NNckavLDSKzLOM2W2sfdB1h0SScKDSyUq+WbzVopQ38/LorDsOLGjzGd9FHE6AEoltICtZNfmYr/aIEEsl1cNvXd6cNhAV//sDuSW66/36xI8CQcnGbAv00CMuOnZPHZSGEWD6La4KjDcs43RMz2GZx5G8eTheENZhupemeW2UJ6c68u7IbwoPz1/HaeWkE1lJDxGCjsDykvnfB1sV5ll3Gd2EKox3XVcHvatwQYVS6YXdcOvuEzzx/8ViMlJurIRb0YvEaBrniIERB5TlXVIa0iKSvj79w4zzsPDv7LdM9jXs9qaxJM2KlWCxJOOwyzsNwAMv42XHoU4Sk2qhbPIrOsje6T0jabEOtdCZWoNXXHpfakSrpt1I1tMZfxCLkLYzK9H2qAbGlmAchq764M1sSTXNF97W6EqiFs4XKP0pYwobYahRlZmmIh3/XF38ocohpO4b2X59HXxS7auT1Io1nXPxC/rHl++jp4fLZwhWgfxX1UVJz7fxnmOSQ1PXJNwFijBzrgLGVC0JEV/txZ4PNRmCLb7cc0T3YAF5A3gY7/7UzBzStwHNTHZBbBS3ipkaZQYW03Z+y+lgdjkeL177j1fa8Uclw6LUUP5b2jdym3kUlJxqW/B40xih0xvVM=
+linux:
+  os: linux
+  dist: xenial
+  sudo: required
+  language: python
+  python: '3.7'
+  install: &1
+  - pip install -U conan conan_package_tools
+  addons: &2
+    apt:
+      sources:
+      - llvm-toolchain-xenial-8
+      - llvm-toolchain-xenial-7
+      packages:
+      - figlet
+matrix:
+  include:
+  - os: linux
+    dist: xenial
+    sudo: required
+    language: python
+    python: '3.7'
+    install: *1
+    addons: *2
+    env: CONAN_GCC_VERSIONS=7 CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 PACKAGES="gcc-7
+      g++-7"
+  - os: linux
+    dist: xenial
+    sudo: required
+    language: python
+    python: '3.7'
+    install: *1
+    addons: *2
+    env: CONAN_GCC_VERSIONS=8 CC=/usr/bin/gcc-8 CXX=/usr/bin/g++-8 PACKAGES="gcc-8
+      g++-8"
+  - os: linux
+    dist: xenial
+    sudo: required
+    language: python
+    python: '3.7'
+    install: *1
+    addons: *2
+    env: CONAN_CLANG_VERSIONS=7.1 CC=/usr/bin/clang-7 CXX=/usr/bin/clang++-7 PACKAGES=clang-7
+  - os: linux
+    dist: xenial
+    sudo: required
+    language: python
+    python: '3.7'
+    install: *1
+    addons: *2
+    env: CONAN_CLANG_VERSIONS=8 CC=/usr/bin/clang-8 CXX=/usr/bin/clang++-8 PACKAGES=clang-8
+before_install:
+- sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+- sudo apt-get update -q
+- sudo apt-get install libstdc++-7-dev ${PACKAGES} -y
+- figlet "CMake"
+- wget https://github.com/Kitware/CMake/releases/download/v3.14.3/cmake-3.14.3-Linux-x86_64.sh
+- chmod +x cmake-3.14.3-Linux-x86_64.sh
+- sudo ./cmake-3.14.3-Linux-x86_64.sh --prefix=/usr/local/ --skip-license --exclude-subdir
+- rm cmake-3.14.3-Linux-x86_64.sh
+- cmake --version
+install:
+- chmod +x .travis/install.sh
+- "./.travis/install.sh"
+script:
+- chmod +x .travis/run.sh
+- "./.travis/run.sh"
