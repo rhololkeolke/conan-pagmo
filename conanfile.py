@@ -42,6 +42,8 @@ class PagmoConan(ConanFile):
         "with_nlopt": True,
     }
 
+    requires = ("boost/1.69.0@conan/stable",)
+
     # Custom attributes for Bincrafters recipe conventions
     _source_subfolder = "source_subfolder"
     _build_subfolder = "build_subfolder"
