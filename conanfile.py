@@ -28,15 +28,11 @@ class PagmoConan(ConanFile):
     # Options may need to change depending on the packaged library.
     settings = "os", "arch", "compiler", "build_type"
     options = {
-        "shared": [True, False],
-        "fPIC": [True, False],
         "with_eigen3": [True, False],
         "with_ipopt": [True, False],
         "with_nlopt": [True, False],
     }
     default_options = {
-        "shared": False,
-        "fPIC": True,
         "with_eigen3": True,
         "with_ipopt": True,
         "with_nlopt": True,
@@ -106,7 +102,6 @@ class PagmoConan(ConanFile):
     def _configure_cmake(self):
         cmake = CMake(self)
         cmake.definitions["PAGMO_BUILD_TESTS"] = False
-        cmake.definitions["CMAKE_POSITION_INDEPENDENT_CODE"] = self.options.fPIC
         # Disable optional components
         cmake.definitions["PAGMO_WITH_EIGEN3"] = self.options.with_eigen3
         cmake.definitions["PAGMO_WITH_NLOPT"] = self.options.with_nlopt
