@@ -120,4 +120,6 @@ class PagmoConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)
+        if self.options.with_ipopt:
+            self.cpp_info.libs.append("ipopt")
         self.cpp_info.libs.append("pthread")
